@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class RoleNoteSeeder extends Seeder
 {
@@ -13,6 +14,13 @@ class RoleNoteSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table("role_notes")->insert([
+            [
+                "role_notes" => "auteur",
+            ],
+            [
+                "role_notes" => "editeur",
+            ],
+        ]);
     }
 }

@@ -17,8 +17,7 @@ class CreateNotesTable extends Migration
             $table->id();
             $table->string("title");
             $table->longText("content");
-            $table->foreignId("tags_id")->constrained();
-            $table->foreignId("like_id")->constrained();
+            $table->integer("like");
             $table->timestamps();
         });
     }

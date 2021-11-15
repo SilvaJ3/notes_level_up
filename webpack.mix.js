@@ -11,8 +11,10 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'public/css', [
-    require('postcss-import'),
-    require('tailwindcss'),
-    require('autoprefixer'),
-]);
+ mix.js('resources/js/app.js', 'public/js')
+ .js("./node_modules/@fortawesome/fontawesome-free/js/all.min.js", "public/js")
+ .postCss('resources/css/app.css', 'public/css', [
+     require('postcss-import'),
+     require('tailwindcss'),
+     require('autoprefixer'),
+ ]);

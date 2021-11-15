@@ -15,12 +15,12 @@ class Note extends Model
 
     public function likes() 
     {
-        return $this->belongsTo(Like::class, "like_id", "id");
+        return $this->belongsToMany(Like::class, "likes");
     }
 
     public function role_notes()
     {
-        return $this->belongsToMany(RoleNote::class, "note_role_user_pivots");
+        return $this->belongsToMany(RoleNote::class, "note_role_user_pivots", "note_id", "role_notes_id");
     }
 
     public function users()
