@@ -56,7 +56,7 @@
                                         <td class="px-2 py-3 border-b border-gray-200 bg-white text-sm text-center w-32">
                                             <div class="grid grid-cols-1 gap-1">
                                                 @foreach ($note->tags as $tag)
-                                                    <a href="/tags/{{$tag->id}}" class="rounded-full bg-gray-400 text-white px-2 py-1 overflow-hidden">{{$tag->tag}}</a>
+                                                    <a href="/tags/{{$tag->id}}" class="rounded-full bg-gray-400 text-white px-2 py-1 overflow-hidden">{{Str::limit($tag->tag, 10)}}</a>
                                                 @endforeach
                                             </div>
                                         </td>
@@ -83,7 +83,13 @@
                                                     </form>
                                                 @endif
                                             </a>
-                                            <p class="mx-2">{{$note->like}} likes</p>
+                                            <p class="mx-2">
+                                                @if ($note->like <= 1)
+                                                    {{$note->like}} like
+                                                @else
+                                                    {{$note->like}} likes
+                                                @endif
+                                            </p>
                                         </td>
                                         <td class="px-2 py-3 border-b border-gray-200 bg-white text-sm text-center">
                                             <a href="/notes/{{$note->id}}">

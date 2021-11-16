@@ -31,13 +31,19 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::resource('/notes', NoteController::class);
+Route::resource('/notes', NoteController::class)->middleware("onMobile");
 
 /* ---------------------------- Page : Vos notes ---------------------------- */
 
 Route::get("/perso", function() {
     $user = User::find(Auth::user()->id);
-    $notes = $user->notes;
+    $notes = [];
+    $pivot = NoteRoleUserPivot::where("user_id", $user->id)->where("role_notes_id", 1)->get();
+    foreach ($pivot as $note_id) {
+        $note = Note::where("id", $note_id->note_id)->first();
+        array_push($notes, $note);
+    }
+    // dd($notes);
     $userLike = Like::where("user_id", $user->id)->get();
     return view("pages.perso.perso", compact("notes", "userLike"));
 });
@@ -52,8 +58,11 @@ Route::get("/liked", function() {
     foreach ($likeds as $like) {
         array_push($likeds_list, $like);
     }
-    return view("pages.liked.liked", compact("notes", "likeds_list"));
-});
+    $pivot = NoteRoleUserPivot::all();
+    $users = User::all();
+    $userLike = Like::where("user_id", $user->id)->get();
+    return view("pages.liked.liked", compact("notes", "likeds_list", "pivot", "users", "userLike"));
+})->middleware("onMobile");
 
 /* ------------------------- Page : Notes Partagées ------------------------- */
 
@@ -66,9 +75,11 @@ Route::get("/shared", function() {
         $note = Note::find($shared->note_id);
         array_push($shared_list, $note);
     }
+    $pivot = NoteRoleUserPivot::all();
+    $users = User::all();
     $userLike = Like::where("user_id", $user->id)->get();
 
-    return view("pages.shared.shared", compact("notes", "shared_list", "userLike"));
+    return view("pages.shared.shared", compact("notes", "shared_list", "pivot", "users", "userLike"));
 });
 
 /* ---------------------------------- Tags ---------------------------------- */

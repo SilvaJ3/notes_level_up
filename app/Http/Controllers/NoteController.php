@@ -21,7 +21,6 @@ class NoteController extends Controller
      */
     public function index()
     {
-        dd(request());
         $notes = Note::orderByDesc("like")->paginate(10);
         $user = User::find(Auth::user()->id);
         $users = User::all();
