@@ -2,8 +2,11 @@
 
 
 @section('content')
+    <div class="flex justify-center py-4">
+        <h1 class="text-center text-black text-3xl underline">Les notes que d'autres utilisateurs vous ont partagées</h1>
+    </div>
     <div class="p-12 grid grid-cols-3 gap-4">
-        @foreach ($notes as $note)
+        @foreach ($shared_list as $note)
         <div class="border shadow-md rounded-md p-5 relative">
             <div class="absolute top-2 right-2 flex">
                 <p class="mx-2">{{$note->like}} likes</p>
@@ -32,7 +35,7 @@
                 <h1 class="underline text-xl font-semibold pt-2">{{$note->title}}</h1>
                 <p class="py-3">{{Str::limit($note->content, 100)}}</p>
             </a>
-            <p class="py-3">{{Str::ucfirst($note->role_notes[0]->role_notes)}} : {{$note->users[0]->name}}</p>
+            <p class="py-3">Auteur : {{$note->users[0]->name}}</p>
             @foreach ($note->tags as $tag)
                 <span class="rounded-full bg-gray-400 text-white px-2 py-1 mr-3">{{$tag->tag}}</span>
             @endforeach

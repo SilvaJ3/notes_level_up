@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
 use App\Models\Note;
+use App\Models\NoteRoleUserPivot;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +20,10 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = Note::all();
-        return view("pages.global.global", compact("notes"));
+        $notes = Note::all()->sortByDesc("like");
+        $user = User::find(Auth::user()->id);
+        $userLike = Like::where("user_id", $user->id)->get();
+        return view("pages.global.global", compact("notes", "userLike"));
     }
 
     /**
@@ -90,7 +95,10 @@ class NoteController extends Controller
     public function show(Note $note)
     {
         $show = Note::find($note)[0];
-        return view("pages.perso.show", compact("show"));
+        $user = User::find(Auth::user()->id);
+        $notes = $user->notes;
+        $userLike = Like::where("user_id", $user->id)->get();
+        return view("pages.perso.show", compact("show", "userLike"));
     }
 
     /**
@@ -125,5 +133,34 @@ class NoteController extends Controller
     public function destroy(Note $note)
     {
         //
+    }
+
+    public function share(Request $request, $id)
+    {
+        $note = Note::find($id);
+        $user = Auth::user();
+        $email = $request->email;
+        $sharedWith = User::where("email", $email)->first();
+
+        if ($sharedWith) { // On vérifie si l'email existe déjà dans la base de données
+            $alreadyEditor = NoteRoleUserPivot::where("note_id", $note->id)->where("role_notes_id", 2)->where("user_id", $sharedWith->id)->first();
+    
+            if ($alreadyEditor) {
+                return redirect()->back();
+            } else {
+                DB::table("note_role_user_pivots")->insert([
+                    [
+                        "note_id" => $note->id,
+                        "role_notes_id" => 2, // Par défaut 2 car on partage la note
+                        "user_id" => $sharedWith->id,
+                    ]
+                ]);
+            }
+        } else {
+            return redirect()->back();
+        }
+        
+        return redirect()->back();
+        
     }
 }

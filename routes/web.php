@@ -4,6 +4,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NoteController;
 use App\Models\Like;
 use App\Models\Note;
+use App\Models\NoteRoleUserPivot;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -40,8 +41,41 @@ Route::get("/perso", function() {
     return view("pages.perso.perso", compact("notes", "userLike"));
 });
 
+/* --------------------------- Page : Notes Likées -------------------------- */
 
-/* --------------------------- Functionnalité LIKE -------------------------- */
+Route::get("/liked", function() {
+    $user = User::find(Auth::user()->id);
+    $notes = $user->notes;
+    $likeds = $user->like;
+    $likeds_list = [];
+    foreach ($likeds as $like) {
+        array_push($likeds_list, $like);
+    }
+    return view("pages.liked.liked", compact("notes", "likeds_list"));
+});
+
+/* ------------------------- Page : Notes Partagées ------------------------- */
+
+Route::get("/shared", function() {
+    $user = User::find(Auth::user()->id);
+    $notes = $user->notes;
+    $shared = NoteRoleUserPivot::where("role_notes_id", 2)->where("user_id", $user->id)->get();
+    $shared_list = [];
+    foreach ($shared as $shared) {
+        $note = Note::find($shared->note_id);
+        array_push($shared_list, $note);
+    }
+    $userLike = Like::where("user_id", $user->id)->get();
+
+    return view("pages.shared.shared", compact("notes", "shared_list", "userLike"));
+});
+
+/* --------------------------- Fonctionnalité LIKE -------------------------- */
 
 Route::post("/like/{id}/like", [LikeController::class, "like"]);
 Route::delete("/like/{id}/unlike", [LikeController::class, "unlike"]);
+
+
+/* -------------------------- Fonctionnalité Share -------------------------- */
+
+Route::post("/note/{id}/share", [NoteController::class, "share"]);

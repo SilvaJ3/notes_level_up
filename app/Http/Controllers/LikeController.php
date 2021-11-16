@@ -89,18 +89,23 @@ class LikeController extends Controller
     public function like(Request $request, $id)
     {
         $user = User::find(Auth::user()->id);
-        $note = Note::find($id);
-        $like = new Like;
-        $like->note_id = $id;
-        $like->user_id = $user->id;
-        $user->likes -= 1;
-        $note->like += 1;
-
-        $user->save();
-        $note->save();
-        $like->save();
-
-        return redirect()->back();
+        if ($user->likes == 0) {
+            return redirect()->back();
+        } else {
+            $note = Note::find($id);
+            $like = new Like;
+            $like->note_id = $id;
+            $like->user_id = $user->id;
+            $user->likes -= 1;
+            $note->like += 1;
+    
+            $user->save();
+            $note->save();
+            $like->save();
+    
+            return redirect()->back();
+        }
+        
     }
 
     public function unlike(Request $request, $id)

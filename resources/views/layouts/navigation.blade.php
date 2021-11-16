@@ -15,6 +15,12 @@
                     <x-nav-link href="/perso">
                         {{ __('Vos Notes') }}
                     </x-nav-link>
+                    <x-nav-link href="/liked">
+                        {{ __('Notes likées') }}
+                    </x-nav-link>
+                    <x-nav-link href="/shared">
+                        {{ __('Notes partagées') }}
+                    </x-nav-link>
                 </div>
             </div>
 
