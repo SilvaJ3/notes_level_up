@@ -7,6 +7,11 @@
         <h1 class="font-bold text-center text-3xl underline mb-4">Notes : {{$show->title}}</h1>
         <div>
             <div class="border shadow-md rounded-md p-5 relative">
+                <div class="absolute top-3 left-3">
+                    <a href="/notes/{{$show->id}}/edit" class="bg-green-500 rounded-md px-2 py-1 text-white">
+                        Edit
+                    </a>
+                </div>
                 <div class="absolute top-2 right-2 flex">
                     <p class="mx-2">{{$show->like}} likes</p>
                     @php
@@ -31,7 +36,7 @@
                     @endif
                 </div>
                 <div class="p-10">
-                    <p class="py-3">{{$show->content}}</p>
+                    <p class="py-3">{!! $show->content !!}</p>
                 </div>
                 @foreach ($show->tags as $tag)
                     <span class="rounded-full bg-gray-400 text-white px-2 py-1">{{$tag->tag}}</span>

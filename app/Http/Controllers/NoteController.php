@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Like;
 use App\Models\Note;
 use App\Models\NoteRoleUserPivot;
+use App\Models\NoteTagPivot;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,10 +21,13 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = Note::all()->sortByDesc("like");
+        dd(request());
+        $notes = Note::orderByDesc("like")->paginate(10);
         $user = User::find(Auth::user()->id);
+        $users = User::all();
+        $pivot = NoteRoleUserPivot::all();
         $userLike = Like::where("user_id", $user->id)->get();
-        return view("pages.global.global", compact("notes", "userLike"));
+        return view("pages.global.global", compact("notes", "userLike","users", "pivot"));
     }
 
     /**
@@ -47,7 +51,7 @@ class NoteController extends Controller
     {
         $store = new Note;
         $store->title = $request->title;
-        $store->content = $request->content;
+        $store->content = $request->summary_ckeditor;
         $store->like = 0;
         $store->save();
 
@@ -94,7 +98,7 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        $show = Note::find($note)[0];
+        $show = Note::find($note->id);
         $user = User::find(Auth::user()->id);
         $notes = $user->notes;
         $userLike = Like::where("user_id", $user->id)->get();
@@ -109,7 +113,9 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        //
+        $edit = Note::find($note->id);
+        $tags = Tag::all();
+        return view("pages.perso.edit", compact("edit", "tags"));
     }
 
     /**
@@ -121,7 +127,40 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        //
+        $update = Note::find($note->id);
+        $note = Note::find($note->id);
+        $update->title = $request->title;
+        $update->content = $request->summary_ckeditor;
+        $update->like = $note->like;
+        $update->save();
+
+        // On récupère les tags de notre formulaire
+        $tag1 = $request->tag1;
+        $tag2 = $request->tag2;
+        $tag3 = $request->tag3;
+
+        // On met sous forme de tableau nos tags et ensuite, on filtre notre array pour avoir uniquement les valeurs uniques
+        $tags = [];
+        array_push($tags, $tag1, $tag2, $tag3);
+        $unique = array_unique($tags);
+
+        $oldTags = NoteTagPivot::where("note_id", $update->id)->get();
+
+        foreach ($oldTags as $tag) {
+            $tag->delete();
+        }
+        
+        // On insert dans notre table
+        foreach ($unique as $tag) {
+            DB::table('note_tag_pivots')->insert([
+                [
+                    "note_id" => $update->id,
+                    "tag_id" => $tag,
+                ]
+            ]);
+        }
+
+        return redirect("/notes/".$update->id);
     }
 
     /**

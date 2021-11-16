@@ -33,7 +33,7 @@
             </div>
             <a href="/notes/{{$note->id}}">
                 <h1 class="underline text-xl font-semibold pt-2">{{$note->title}}</h1>
-                <p class="py-3">{{Str::limit($note->content, 100)}}</p>
+                <p class="py-3">{!!Str::limit($note->content, 100)!!}</p>
             </a>
             <p class="py-3">Auteur : {{$note->users[0]->name}}</p>
             @foreach ($note->tags as $tag)

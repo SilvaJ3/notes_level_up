@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\TagController;
 use App\Models\Like;
 use App\Models\Note;
 use App\Models\NoteRoleUserPivot;
@@ -69,6 +70,10 @@ Route::get("/shared", function() {
 
     return view("pages.shared.shared", compact("notes", "shared_list", "userLike"));
 });
+
+/* ---------------------------------- Tags ---------------------------------- */
+
+Route::resource('/tags', TagController::class);
 
 /* --------------------------- Fonctionnalité LIKE -------------------------- */
 

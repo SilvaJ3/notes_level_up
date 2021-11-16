@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
+use App\Models\Note;
+use App\Models\NoteRoleUserPivot;
+use App\Models\NoteTagPivot;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller
 {
@@ -46,7 +52,21 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        //
+        $show = Tag::find($tag->id);
+        $tags = NoteTagPivot::where("tag_id", $show->id)->get();
+        $filter = [];
+
+        foreach ($tags as $tag) {
+            $note = Note::where("id", $tag->note_id)->first();
+            array_push($filter, $note);
+        }
+
+        $user = User::find(Auth::user()->id);
+        $users = User::all();
+        $pivot = NoteRoleUserPivot::all();
+        $userLike = Like::where("user_id", $user->id)->get();
+
+        return view("pages.tags.show", compact("show", "filter", "users", "pivot", "userLike"));
     }
 
     /**
