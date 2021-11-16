@@ -3,17 +3,24 @@
 
 @section('content')
 
-    <div class="p-12 relative">
-        <h1 class="font-bold text-center text-3xl underline mb-4">Notes : {{$show->title}}</h1>
+    <h1 class="font-bold text-center text-3xl underline mt-4">Notes : {{$show->title}}</h1>
+    <div class="py-12 px-72 relative">
         <div>
             <div class="border shadow-md rounded-md p-5 relative">
-                <div class="absolute top-3 left-3">
-                    <a href="/notes/{{$show->id}}/edit" class="bg-green-500 rounded-md px-2 py-1 text-white">
-                        Edit
-                    </a>
-                </div>
+                @if (Auth::user()->id == $author->id || $editor)
+                    <div class="absolute top-3 left-3">
+                        <a href="/notes/{{$show->id}}/edit" class="bg-green-500 rounded-md px-2 py-1 text-white">
+                            Edit
+                        </a>
+                    </div>
+                @endif
                 <div class="absolute top-2 right-2 flex">
-                    <p class="mx-2">{{$show->like}} likes</p>
+                    <p class="mx-2">
+                        @if ($show->like <= 1)
+                            {{$show->like}} like
+                        @else
+                            {{$show->like}} likes
+                        @endif</p>
                     @php
                         $exist = $userLike->where("note_id", $show->id)->first();
                     @endphp
@@ -44,7 +51,8 @@
             </div>
         </div>
         <div class="py-7">
-            @if (Auth::user()->id == $show->users[0]->id)
+            
+            @if (Auth::user()->id == $author->id)
                 <form action="/note/{{$show->id}}/share" method="POST" class="flex flex-col gap-3 items-center">
                     @csrf
                     @method("POST")

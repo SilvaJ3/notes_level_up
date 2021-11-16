@@ -1,9 +1,7 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
+            <div class="py-5 px-3 rounded-md bg-gradient-to-r from-black to-gray-500 text-sm text-white font-semibold shadow-lg hover:cursor-pointer hover:shadow-lg">LEVEL NOTE</div>
         </x-slot>
 
         <!-- Validation Errors -->

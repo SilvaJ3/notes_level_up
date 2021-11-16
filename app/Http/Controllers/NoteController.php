@@ -26,7 +26,9 @@ class NoteController extends Controller
         $users = User::all();
         $pivot = NoteRoleUserPivot::all();
         $userLike = Like::where("user_id", $user->id)->get();
-        return view("pages.global.global", compact("notes", "userLike","users", "pivot"));
+        $tag_pivot = NoteTagPivot::all();
+        $tags = Tag::all()->sortBy("tag");
+        return view("pages.global.global", compact("notes", "userLike","users", "pivot", "tag_pivot", "tags"));
     }
 
     /**
@@ -63,6 +65,11 @@ class NoteController extends Controller
         $tags = [];
         array_push($tags, $tag1, $tag2, $tag3);
         $unique = array_unique($tags);
+        
+        if (in_array("none", $unique)) {
+            $index = array_search("none", $unique);
+            array_splice($unique, $index);
+        }
 
         // On insert dans notre table
         foreach ($unique as $tag) {
@@ -101,7 +108,17 @@ class NoteController extends Controller
         $user = User::find(Auth::user()->id);
         $notes = $user->notes;
         $userLike = Like::where("user_id", $user->id)->get();
-        return view("pages.perso.show", compact("show", "userLike"));
+        $pivot_author = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 1)->first();
+        $author = User::find($pivot_author->user_id);
+        $editor = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 2)->where("user_id", $user->id)->first();
+
+        if($editor) {
+            $editor = True;
+        } else {
+            $editor = False;
+        }
+                
+        return view("pages.perso.show", compact("show", "userLike", "author", "editor"));
     }
 
     /**
@@ -170,7 +187,31 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        //
+        $destroy = Note::find($note->id);
+
+        // On supprime toutes les liaisons auteur et éditeur sur cette note
+        $note_roles = NoteRoleUserPivot::where("note_id", $destroy->id)->get();
+        foreach ($note_roles as $note_role) {
+            $note_role->delete();
+        }
+
+        // On supprime toutes les liaisons tags avec cette note
+        $tags = NoteTagPivot::where("note_id", $destroy->id)->get();
+        foreach ($tags as $tag) {
+            $tag->delete();
+        }
+        
+        // On incrémente le contingent de like des utilisateurs ayant liké ce post
+        $likes = Like::where("note_id", $destroy->id)->get();
+        foreach ($likes as $like) {
+            $user = User::find($like->user_id);
+            $user->likes += 1;
+            $user->save();
+            $like->delete();
+        }
+
+        $destroy->delete();
+        return redirect()->back();
     }
 
     public function share(Request $request, $id)

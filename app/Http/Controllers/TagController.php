@@ -30,7 +30,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        //
+        return view("pages.tags.create");
     }
 
     /**
@@ -41,7 +41,22 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        request()->validate([
+            "tag" => ["required", "max: 20"],
+        ]);
+
+        $tag = Tag::where("tag", $request->tag)->first();
+
+        if ($tag) {
+            return redirect()->back()->with("warning", "Tag déjà existant");;
+        } else {
+            $store = new Tag;
+            $store->tag = $request->tag;
+
+            $store->save();
+            return redirect("/notes");
+        }
+        
     }
 
     /**

@@ -3,6 +3,9 @@
 
 @section('content')
 
+<div class="flex justify-center py-4">
+    <h1 class="text-center text-black text-3xl underline">Vos notes likées</h1>
+</div>
     <div class="py-20 px-44">
         @if ($likeds_list)
             <table class="min-w-full leading-normal">

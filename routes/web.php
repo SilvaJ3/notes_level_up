@@ -43,7 +43,6 @@ Route::get("/perso", function() {
         $note = Note::where("id", $note_id->note_id)->first();
         array_push($notes, $note);
     }
-    // dd($notes);
     $userLike = Like::where("user_id", $user->id)->get();
     return view("pages.perso.perso", compact("notes", "userLike"));
 });

@@ -1,9 +1,8 @@
-@extends('layouts.index')
-
+@extends('welcome')
 
 @section('content')
         
-    <div class="container mx-auto py-20 px-44 sm:px-8">
+    <div class="container mx-auto py-20 px-44 sm:px-8 flex">
         <div class="py-8">
             <table class="min-w-full leading-normal">
                 <thead>
@@ -101,6 +100,28 @@
 
             <div>
                 {{$notes->links("vendor.pagination.custom")}}
+            </div>
+        </div>
+        <div class="py-8 ml-10">
+            <h1 class="underline mb-3">Tags :</h1>
+            <div class="border p-5 w-44">
+                <ul>
+                    @foreach ($tags as $tag)
+                    @if (count($tag_pivot->where("tag_id", $tag->id)) > 0)
+                        <li>
+                            <a href="/tags/{{$tag->id}}" class="hover:text-blue-700">
+                                {{count($tag_pivot->where("tag_id", $tag->id))}} - {{$tag->tag}}
+                            </a>
+                        </li>
+                    @endif
+                    @endforeach
+                    <hr class="my-3">
+                    <li class="text-center">
+                        <a href="/tags/create" class="hover:text-blue-900">
+                            Ajouter un tag
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
 
