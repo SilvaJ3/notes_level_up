@@ -2,8 +2,8 @@
 
 @section('content')
         
-    <div class="container mx-auto py-20 px-44 sm:px-8 flex">
-        <div class="py-8">
+    <div class="container w-full mx-auto py-20 px-44 sm:px-8 flex">
+        <div class="py-8 w-4/5">
             <table class="min-w-full leading-normal">
                 <thead>
                     <tr>
@@ -57,28 +57,30 @@
                                 </div>
                             </td>
                             <td class="px-2 py-3 border-b border-gray-200 bg-white text-sm text-center w-20">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                    @php
-                                        $exist = $userLike->where("note_id", $note->id)->first();
-                                    @endphp
-                                    @if ($exist)
-                                        <form action="/like/{{$note->id}}/unlike" method="POST" class="flex justify-center">
-                                            @csrf
-                                            @method("DELETE")
-                                            <button type="submit">
-                                                <i class="fas fa-heart text-red-700"></i>
-                                            </button>
-                                        </form>
-                                    @else
-                                        <form action="/like/{{$note->id}}/like" method="POST" class="flex justify-center">
-                                            @csrf
-                                            @method("POST")
-                                            <button type="submit">
-                                                <i class="far fa-heart text-gray-700"></i>
-                                            </button>
-                                        </form>
-                                    @endif
-                                </a>
+                                @if (Auth::user())
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">
+                                        @php
+                                            $exist = $userLike->where("note_id", $note->id)->first();
+                                        @endphp
+                                        @if ($exist)
+                                            <form action="/like/{{$note->id}}/unlike" method="POST" class="flex justify-center">
+                                                @csrf
+                                                @method("DELETE")
+                                                <button type="submit">
+                                                    <i class="fas fa-heart text-red-700"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="/like/{{$note->id}}/like" method="POST" class="flex justify-center">
+                                                @csrf
+                                                @method("POST")
+                                                <button type="submit">
+                                                    <i class="far fa-heart text-gray-700"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </a>
+                                @endif
                                 <p class="mx-2">
                                     @if ($note->like <= 1)
                                         {{$note->like}} like
@@ -102,7 +104,7 @@
                 {{$notes->links("vendor.pagination.custom")}}
             </div>
         </div>
-        <div class="py-8 ml-10">
+        <div class="py-8 ml-10 w-1/5">
             <h1 class="underline mb-3">Tags :</h1>
             <div class="border p-5 w-44">
                 <ul>
@@ -115,12 +117,15 @@
                         </li>
                     @endif
                     @endforeach
-                    <hr class="my-3">
-                    <li class="text-center">
-                        <a href="/tags/create" class="hover:text-blue-900">
-                            Ajouter un tag
-                        </a>
-                    </li>
+                    @if (Auth::user())
+                        <hr class="my-3">
+
+                        <li class="text-center">
+                            <a href="/tags/create" class="hover:text-blue-900">
+                                Ajouter un tag
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

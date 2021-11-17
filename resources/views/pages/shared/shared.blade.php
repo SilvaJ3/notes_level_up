@@ -6,7 +6,11 @@
         <h1 class="text-center text-black text-3xl underline">Les notes que d'autres utilisateurs vous ont partagées</h1>
     </div>
     @if (count($shared_list) < 1)
-        <h1 class="mt-3 font-semibold text-center">Il n'y a aucune note partagée avec vous actuellement</h1>
+        <div class="p-20">
+            <h1 class="font-bold text-black text-center text-2xl">
+                Il n'y a aucune note partagée avec vous actuellement
+            </h1>
+        </div>
     @else
         <div class="py-20 px-44">
             <table class="min-w-full leading-normal">

@@ -1,3 +1,4 @@
+@extends('layouts.flash')
 @extends('layouts.index')
 
 
@@ -14,9 +15,11 @@
         @endif
     </div>
     @if (count($notes) < 1)
-        <h1 class="mt-3 font-semibold text-center">Il n'y a aucune note partagée avec vous actuellement</h1>
-        <div class="flex justify-center">
-            <a href="/notes/create" class="text-blue-700 hover:text-blue-900">En créer une ?</a>
+        <div class="p-20">
+            <h1 class="font-bold text-black text-center text-2xl">
+                Vous n'avez pas encore de notes
+                <a href="/notes/create" class="text-blue-700 hover:text-blue-900">En créer une ?</a>
+            </h1>
         </div>
     @else
         <div class="py-12 px-44">

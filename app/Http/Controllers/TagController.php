@@ -54,7 +54,7 @@ class TagController extends Controller
             $store->tag = $request->tag;
 
             $store->save();
-            return redirect("/notes");
+            return redirect("/notes")->with("success", "Tag créé");;;
         }
         
     }
@@ -67,21 +67,39 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        $show = Tag::find($tag->id);
-        $tags = NoteTagPivot::where("tag_id", $show->id)->get();
-        $filter = [];
 
-        foreach ($tags as $tag) {
-            $note = Note::where("id", $tag->note_id)->first();
-            array_push($filter, $note);
+        if (Auth::user()) {
+            $show = Tag::find($tag->id);
+            $tags = NoteTagPivot::where("tag_id", $show->id)->get();
+            $filter = [];
+
+            foreach ($tags as $tag) {
+                $note = Note::where("id", $tag->note_id)->first();
+                array_push($filter, $note);
+            }
+            
+            $users = User::all();
+            $pivot = NoteRoleUserPivot::all();
+
+            $user = User::find(Auth::user()->id);
+            $userLike = Like::where("user_id", $user->id)->get();
+            return view("pages.tags.show", compact("show", "filter", "users", "pivot", "userLike"));
+        } else {
+            $show = Tag::find($tag->id);
+            $tags = NoteTagPivot::where("tag_id", $show->id)->get();
+            $filter = [];
+
+            foreach ($tags as $tag) {
+                $note = Note::where("id", $tag->note_id)->first();
+                array_push($filter, $note);
+            }
+
+            $users = User::all();
+            $pivot = NoteRoleUserPivot::all();
+
+            return view("pages.tags.show", compact("show", "filter", "users", "pivot"));
         }
 
-        $user = User::find(Auth::user()->id);
-        $users = User::all();
-        $pivot = NoteRoleUserPivot::all();
-        $userLike = Like::where("user_id", $user->id)->get();
-
-        return view("pages.tags.show", compact("show", "filter", "users", "pivot", "userLike"));
     }
 
     /**

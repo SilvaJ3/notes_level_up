@@ -3,9 +3,12 @@
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 use App\Models\Like;
 use App\Models\Note;
 use App\Models\NoteRoleUserPivot;
+use App\Models\NoteTagPivot;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +25,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::user()) {
+        $notes = Note::orderByDesc("like")->paginate(3);
+        $users = User::all();
+        $pivot = NoteRoleUserPivot::all();
+        $tag_pivot = NoteTagPivot::all();
+        $tags = Tag::all()->sortBy("tag");
+        $user = User::find(Auth::user()->id);
+        $userLike = Like::where("user_id", $user->id)->get();
+        return view("pages.global.global", compact("notes", "userLike","users", "pivot", "tag_pivot", "tags"));
+    } else {
+        $notes = Note::orderByDesc("like")->paginate(3);
+        $users = User::all();
+        $pivot = NoteRoleUserPivot::all();
+        $tag_pivot = NoteTagPivot::all();
+        $tags = Tag::all()->sortBy("tag");
+        return view("pages.global.global", compact("notes","users", "pivot", "tag_pivot", "tags"));
+    }
 });
 
 Route::get('/dashboard', function () {
@@ -81,6 +100,10 @@ Route::get("/shared", function() {
     return view("pages.shared.shared", compact("notes", "shared_list", "pivot", "users", "userLike"));
 });
 
+/* ------------------------------ Page : Profil ----------------------------- */
+
+Route::resource('/user', UserController::class);
+
 /* ---------------------------------- Tags ---------------------------------- */
 
 Route::resource('/tags', TagController::class);
@@ -94,3 +117,18 @@ Route::delete("/like/{id}/unlike", [LikeController::class, "unlike"]);
 /* -------------------------- Fonctionnalité Share -------------------------- */
 
 Route::post("/note/{id}/share", [NoteController::class, "share"]);
+
+/* ---------------------------------- Shop ---------------------------------- */
+
+/* ------------------------------ Achat de like ----------------------------- */
+
+Route::post("/shop/{id}/like", function($id) {
+
+    $user = User::find($id);
+    $user->credits -= 2;
+    $user->likes += 1;
+
+    $user->save();
+
+    return redirect()->back()->with("success", "Achat validé -- + 1 ❤️");
+});

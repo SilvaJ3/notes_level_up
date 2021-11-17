@@ -61,28 +61,30 @@
                                             </div>
                                         </td>
                                         <td class="px-2 py-3 border-b border-gray-200 bg-white text-sm text-center w-20">
-                                            <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                                @php
-                                                    $exist = $userLike->where("note_id", $note->id)->first();
-                                                @endphp
-                                                @if ($exist)
-                                                    <form action="/like/{{$note->id}}/unlike" method="POST" class="flex justify-center">
-                                                        @csrf
-                                                        @method("DELETE")
-                                                        <button type="submit">
-                                                            <i class="fas fa-heart text-red-700"></i>
-                                                        </button>
-                                                    </form>
-                                                @else
-                                                    <form action="/like/{{$note->id}}/like" method="POST" class="flex justify-center">
-                                                        @csrf
-                                                        @method("POST")
-                                                        <button type="submit">
-                                                            <i class="far fa-heart text-gray-700"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </a>
+                                            @if (Auth::user())
+                                                <a href="#" class="text-indigo-600 hover:text-indigo-900">
+                                                    @php
+                                                        $exist = $userLike->where("note_id", $note->id)->first();
+                                                    @endphp
+                                                    @if ($exist)
+                                                        <form action="/like/{{$note->id}}/unlike" method="POST" class="flex justify-center">
+                                                            @csrf
+                                                            @method("DELETE")
+                                                            <button type="submit">
+                                                                <i class="fas fa-heart text-red-700"></i>
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <form action="/like/{{$note->id}}/like" method="POST" class="flex justify-center">
+                                                            @csrf
+                                                            @method("POST")
+                                                            <button type="submit">
+                                                                <i class="far fa-heart text-gray-700"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </a>
+                                            @endif
                                             <p class="mx-2">
                                                 @if ($note->like <= 1)
                                                     {{$note->like}} like

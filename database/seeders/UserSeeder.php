@@ -19,22 +19,28 @@ class UserSeeder extends Seeder
                 "name" => "Admin",
                 "email" => "admin@admin.com",
                 "password" => bcrypt("admin@admin.com"),
+                "image" => "jr.jpeg",
                 "role_id" => 1,
                 "likes" => 10,
+                "credits" => 10,
             ],
             [
                 "name" => "user1",
                 "email" => "user1@user1.com",
                 "password" => bcrypt("user1@user1.com"),
+                "image" => "jr1.jpeg",
                 "role_id" => 2,
                 "likes" => 10,
+                "credits" => 10,
             ],
             [
                 "name" => "user2",
                 "email" => "user2@user2.com",
                 "password" => bcrypt("user2@user2.com"),
+                "image" => "jr2.jpeg",
                 "role_id" => 2,
                 "likes" => 10,
+                "credits" => 10,
             ],
         ]);
     }

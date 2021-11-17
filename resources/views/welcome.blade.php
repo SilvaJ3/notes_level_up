@@ -34,7 +34,7 @@
                     <li class="space-x-5 text-xl">
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ url('/dashboard') }}" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">Dashboard</a>
+                            <a href="{{ url('/perso') }}" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">Dashboard</a>
                             
                         @else
                             <a href="{{ route('login') }}" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">

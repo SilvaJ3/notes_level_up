@@ -112,13 +112,13 @@ class LikeController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $note = Note::find($id);
-        $like = Like::where("note_id", $note->id)->where("user_id", $user->id)->get();
+        $like = Like::where("note_id", $note->id)->where("user_id", $user->id)->first();
         $user->likes += 1; // On incrémente le nombre de like possible pour l'user
         $note->like -= 1; // On décrémente le nombre de like
 
         $user->save();
         $note->save();
-        $like[0]->delete();
+        $like->delete();
 
         return redirect()->back();
     }

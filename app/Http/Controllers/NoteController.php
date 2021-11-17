@@ -21,14 +21,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = Note::orderByDesc("like")->paginate(10);
-        $user = User::find(Auth::user()->id);
-        $users = User::all();
-        $pivot = NoteRoleUserPivot::all();
-        $userLike = Like::where("user_id", $user->id)->get();
-        $tag_pivot = NoteTagPivot::all();
-        $tags = Tag::all()->sortBy("tag");
-        return view("pages.global.global", compact("notes", "userLike","users", "pivot", "tag_pivot", "tags"));
+        //
     }
 
     /**
@@ -82,7 +75,7 @@ class NoteController extends Controller
         }
 
         // Table pivot
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
         
         DB::table("note_role_user_pivots")->insert([
             [
@@ -92,8 +85,10 @@ class NoteController extends Controller
             ]
         ]);
 
+        $user->credits += 1;
+        $user->save();
 
-        return redirect("/perso");
+        return redirect("/perso")->with("success", "Note ajoutée avec success. \n + 1 🪙");;;
     }
 
     /**
@@ -104,21 +99,33 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        $show = Note::find($note->id);
-        $user = User::find(Auth::user()->id);
-        $notes = $user->notes;
-        $userLike = Like::where("user_id", $user->id)->get();
-        $pivot_author = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 1)->first();
-        $author = User::find($pivot_author->user_id);
-        $editor = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 2)->where("user_id", $user->id)->first();
+        if (Auth::user()) {
+            $show = Note::find($note->id);
+            $user = User::find(Auth::user()->id);
+            $userLike = Like::where("user_id", $user->id)->get();
+            $pivot_author = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 1)->first();
+            $author = User::find($pivot_author->user_id);
+            $editor = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 2)->where("user_id", $user->id)->first();
+            $pivot = NoteRoleUserPivot::all();
+            $users = User::all();
 
-        if($editor) {
-            $editor = True;
+            if($editor) {
+                $editor = True;
+            } else {
+                $editor = False;
+            }
+                    
+            return view("pages.perso.show", compact("show", "userLike", "author", "editor", "pivot", "users"));
         } else {
-            $editor = False;
+            $show = Note::find($note->id);
+            $pivot_author = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 1)->first();
+            $author = User::find($pivot_author->user_id);
+            $pivot = NoteRoleUserPivot::all();
+            $users = User::all();
+
+            return view("pages.perso.show", compact("show", "author", "pivot", "users"));
         }
                 
-        return view("pages.perso.show", compact("show", "userLike", "author", "editor"));
     }
 
     /**
@@ -176,7 +183,7 @@ class NoteController extends Controller
             ]);
         }
 
-        return redirect("/notes/".$update->id);
+        return redirect("/notes/".$update->id)->with("success", "Votre notre a bien été modifiée");;;
     }
 
     /**
@@ -225,7 +232,7 @@ class NoteController extends Controller
             $alreadyEditor = NoteRoleUserPivot::where("note_id", $note->id)->where("role_notes_id", 2)->where("user_id", $sharedWith->id)->first();
     
             if ($alreadyEditor) {
-                return redirect()->back();
+                return redirect()->back()->with("warning", "Cet utilisateur est déjà éditeur sur cette note 🙅‍♂️");;;
             } else {
                 DB::table("note_role_user_pivots")->insert([
                     [
@@ -234,12 +241,13 @@ class NoteController extends Controller
                         "user_id" => $sharedWith->id,
                     ]
                 ]);
+                return redirect()->back()->with("success", "Cet utilisateur est désormais éditeur sur votre note 👍");
             }
         } else {
-            return redirect()->back();
+            return redirect()->back()->with("warning", "Ce mail ne figure pas dans notre liste 🤷‍♂️");
         }
         
-        return redirect()->back();
         
     }
 }
+

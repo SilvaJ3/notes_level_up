@@ -17,7 +17,11 @@
             </div>
 
             <div class="flex justify-center mt-6 px-6">
-                <button class="bg-blue-600 hover:bg-blue-700 px-3 py-2 text-white">Create</button>
+                @if (Auth::user()->role_id == 1 || Auth::user()->credits >= 30)
+                    <button class="bg-blue-600 hover:bg-blue-700 px-3 py-2 text-white">Create</button>
+                @else
+                    <span class="bg-blue-600 hover:bg-blue-700 px-3 py-2 text-white">Il vous faut 30 crédits pour créer un tag</span>
+                @endif
             </div>
         </form>
     </div>
