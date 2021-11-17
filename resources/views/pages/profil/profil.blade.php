@@ -25,20 +25,23 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 pt-5">
-                <div class="border flex flex-col justify-center items-center p-5">
-                    <h1>Acheter un <i class="fas fa-heart text-red-600"></i></h1>
-                    @if (Auth::user()->credits >= 2)
-                        <form action="/shop/{{Auth::user()->id}}/like" method="POST" class="flex justify-center mt-3">
-                            @csrf
-                            @method("POST")
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 text-white">
-                                BUY - 2 🪙
-                            </button>
-                        </form>
-                    @else
-                        
-                    @endif
+            <div class="pt-5">
+                <h1 class="text-center text-black font-bold text-2xl mb-4">ShopiyShop</h1>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="border flex flex-col justify-center items-center p-5">
+                        <h1>Acheter un <i class="fas fa-heart text-red-600"></i></h1>
+                        @if (Auth::user()->credits >= 2)
+                            <form action="/shop/{{Auth::user()->id}}/like" method="POST" class="flex justify-center mt-3">
+                                @csrf
+                                @method("POST")
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 text-white">
+                                    BUY - 2 🪙
+                                </button>
+                            </form>
+                        @else
+                            
+                        @endif
+                    </div>
                 </div>
             </div>
 
