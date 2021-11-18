@@ -2,12 +2,13 @@
 
 @section('content')
         
-    @if (Auth::user())
+    {{-- Partie concours --}}
+    {{-- @if (Auth::user())
         <div class="flex flex-col justify-center items-center bg-red-400 py-2">
             <h1 class="text-black text-2xl">Le concours se termine le {{date('d/m/Y', $end)}} à {{date('H:i:s', $end)}}</h1>
             <span>Participez au concours en soumettant votre note</span>
         </div>
-    @endif
+    @endif --}}
     <div class="container w-full mx-auto py-10 px-44 sm:px-8 flex">
         <div class="py-8 w-5/6">
             <div class="grid xl:grid-cols-3 lg:grid-cols-2 gap-4 grid-cols-1">
