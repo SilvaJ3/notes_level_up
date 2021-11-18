@@ -26,7 +26,18 @@ use Carbon\Carbon;
 */
 
 Route::get('/', function () {
+    // $start = strtotime("11/18/2021 15:48:55");
+    // $now = Carbon::now()->timestamp;
+
+    // $end = strtotime("+ 1 day ", $start);
+    
+    // dd("Le concours se finit le " . date('m/d/Y H:i:s', $end));
+
     if (Auth::user()) {
+        $start = strtotime("11/18/2021 15:48:55");
+        $now = Carbon::now()->timestamp;
+
+        $end = strtotime("+ 1 day ", $start);
         $notes = Note::orderByDesc("like")->paginate(9);
         $users = User::all();
         $pivot = NoteRoleUserPivot::all();
@@ -34,7 +45,7 @@ Route::get('/', function () {
         $tags = Tag::all()->sortBy("tag");
         $user = User::find(Auth::user()->id);
         $userLike = Like::where("user_id", $user->id)->get();
-        return view("pages.global.global", compact("notes", "userLike","users", "pivot", "tag_pivot", "tags"));
+        return view("pages.global.global", compact("notes", "userLike","users", "pivot", "tag_pivot", "tags" ,"end", "now"));
     } else {
         $notes = Note::orderByDesc("like")->paginate(9);
         $users = User::all();
@@ -119,6 +130,10 @@ Route::delete("/like/{id}/unlike", [LikeController::class, "unlike"]);
 /* -------------------------- Fonctionnalité Share -------------------------- */
 
 Route::post("/note/{id}/share", [NoteController::class, "share"]);
+
+/* ----------------------- Fonctionnalité Contest Note ---------------------- */
+
+Route::post("/note/{id}/contest", [NoteController::class, "contest"]);
 
 /* ---------------------------------- Shop ---------------------------------- */
 

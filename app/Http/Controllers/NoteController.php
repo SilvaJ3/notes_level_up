@@ -8,6 +8,7 @@ use App\Models\NoteRoleUserPivot;
 use App\Models\NoteTagPivot;
 use App\Models\Tag;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,7 @@ class NoteController extends Controller
         $store->title = $request->title;
         $store->content = $request->summary_ckeditor;
         $store->like = 0;
+        $store->contest = False;
         $store->save();
 
         // On récupère les tags de notre formulaire
@@ -114,8 +116,12 @@ class NoteController extends Controller
             } else {
                 $editor = False;
             }
-                    
-            return view("pages.perso.show", compact("show", "userLike", "author", "editor", "pivot", "users"));
+
+            $start = strtotime("11/18/2021 15:48:55");
+            $now = Carbon::now()->timestamp;
+        
+            $end = strtotime("+ 1 day ", $start);
+            return view("pages.perso.show", compact("show", "userLike", "author", "editor", "pivot", "users", "now", "end"));
         } else {
             $show = Note::find($note->id);
             $pivot_author = NoteRoleUserPivot::where("note_id", $show->id)->where("role_notes_id", 1)->first();
@@ -155,6 +161,7 @@ class NoteController extends Controller
         $update->title = $request->title;
         $update->content = $request->summary_ckeditor;
         $update->like = $note->like;
+        $update->contest = $note->contest;
         $update->save();
 
         // On récupère les tags de notre formulaire
@@ -218,8 +225,9 @@ class NoteController extends Controller
         }
 
         $destroy->delete();
-        return redirect()->back();
+        return redirect("/perso")->with("warning", "note supprimée 🗑️");
     }
+
 
     public function share(Request $request, $id)
     {
@@ -230,7 +238,6 @@ class NoteController extends Controller
 
         if ($sharedWith) { // On vérifie si l'email existe déjà dans la base de données
             $alreadyEditor = NoteRoleUserPivot::where("note_id", $note->id)->where("role_notes_id", 2)->where("user_id", $sharedWith->id)->first();
-    
             if ($alreadyEditor) {
                 return redirect()->back()->with("warning", "Cet utilisateur est déjà éditeur sur cette note 🙅‍♂️");;;
             } else {
@@ -248,6 +255,16 @@ class NoteController extends Controller
         }
         
         
+    }
+
+    public function contest(Request $request, $id)
+    {
+        $contest = Note::find($id);
+        $contest->contest = True;
+
+        $contest->save();
+
+        return redirect()->back()->with("success", "Merci pour votre participation 🎫");
     }
 }
 

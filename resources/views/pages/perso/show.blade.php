@@ -4,17 +4,29 @@
 
 @section('content')
 
+    @if ($end > $now)
+        <div class="flex flex-col justify-center items-center py-2 bg-red-400">
+            <h1>Un concours est en cours actuellement...</h1>
+            <form action="/note/{{$show->id}}/contest" method="POST">
+                @csrf
+                @method("POST")
+                <button type="submit" class="text-blue-600 hover:text-blue-800">
+                    Participer avec cette note
+                </button>
+            </form>
+        </div>
+    @endif
     <div class="py-12 lg:px-72 px-32 relative">
         <div>
             <div class="border-8 shadow-lg p-5 relative">
                 @if (Auth::user())
-                <div class="absolute top-3 left-3 flex items-center">
-                            @if (Auth::user()->id == $author->id || $editor)
-                            <a href="/notes/{{$show->id}}/edit" class="bg-green-500 rounded-md px-2 py-1 text-white">
-                                Edit
-                            </a>
-                            @endif
-                            @if (Auth::user()->id == $author->id)
+                    <div class="absolute top-3 left-3 flex items-center">
+                        @if (Auth::user()->id == $author->id || $editor)
+                        <a href="/notes/{{$show->id}}/edit" class="bg-green-500 rounded-md px-2 py-1 text-white">
+                            Edit
+                        </a>
+                        @endif
+                        @if (Auth::user()->id == $author->id)
                             <form action="/notes/{{$show->id}}" method="POST" class="mx-2">
                                 @csrf
                                 @method("DELETE")
@@ -22,8 +34,8 @@
                                     <i class="fas fa-trash hover:text-red-700"></i>
                                 </button>
                             </form>
-                            @endif
-                        </div>
+                        @endif
+                    </div>
                 @endif
                 <div class="absolute top-2 right-2 flex">
                     <p class="mx-2">

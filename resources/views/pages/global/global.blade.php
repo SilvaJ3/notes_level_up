@@ -2,8 +2,14 @@
 
 @section('content')
         
-    <div class="container w-full mx-auto py-20 px-44 sm:px-8 flex">
-        <div class="py-8 w-4/5">
+    @if (Auth::user())
+        <div class="flex flex-col justify-center items-center bg-red-400 py-2">
+            <h1 class="text-black text-2xl">Le concours se termine le {{date('d/m/Y', $end)}} à {{date('H:i:s', $end)}}</h1>
+            <span>Participez au concours en soumettant votre note</span>
+        </div>
+    @endif
+    <div class="container w-full mx-auto py-10 px-44 sm:px-8 flex">
+        <div class="py-8 w-5/6">
             <div class="grid xl:grid-cols-3 lg:grid-cols-2 gap-4 grid-cols-1">
                 @foreach ($notes as $note)
                         <!-- card -->
@@ -12,26 +18,27 @@
                                     <div class="absolute top-2 right-2 flex">
                                         @if (Auth::user())
                                             <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                                @php
-                                                    $exist = $userLike->where("note_id", $note->id)->first();
-                                                @endphp
-                                                @if ($exist)
-                                                    <form action="/like/{{$note->id}}/unlike" method="POST" class="flex justify-center">
-                                                        @csrf
-                                                        @method("DELETE")
-                                                        <button type="submit">
-                                                            <i class="fas fa-heart text-red-700"></i>
-                                                        </button>
-                                                    </form>
-                                                @else
-                                                    <form action="/like/{{$note->id}}/like" method="POST" class="flex justify-center">
-                                                        @csrf
-                                                        @method("POST")
-                                                        <button type="submit">
-                                                            <i class="far fa-heart text-gray-700 hover:text-red-700"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
+                                            @php
+                                                // On vérifie si l'user a déjà liké cette note
+                                                $exist = $userLike->where("note_id", $note->id)->first();
+                                            @endphp
+                                            @if ($exist)
+                                                <form action="/like/{{$note->id}}/unlike" method="POST" class="flex justify-center">
+                                                    @csrf
+                                                    @method("DELETE")
+                                                    <button type="submit">
+                                                        <i class="fas fa-heart text-red-700"></i>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="/like/{{$note->id}}/like" method="POST" class="flex justify-center">
+                                                    @csrf
+                                                    @method("POST")
+                                                    <button type="submit">
+                                                        <i class="far fa-heart text-gray-700 hover:text-red-700"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                             </a>
                                         @endif
                                         <p class="mx-2">
@@ -80,7 +87,7 @@
                 {{$notes->links("vendor.pagination.custom")}}
             </div>
         </div>
-        <div class="py-8 ml-10 w-1/5">
+        <div class="py-8 ml-10 w-1/6">
             <h1 class="underline mb-3">Tags :</h1>
             <div class="border p-5 w-44 h-96 overflow-y-auto">
                 <ul>
