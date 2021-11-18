@@ -4,16 +4,22 @@
 
 @section('content')
 
-    <h1 class="font-bold text-center text-3xl underline mt-4">Notes : {{$show->title}}</h1>
-    <div class="py-12 px-72 relative">
+    <div class="py-12 lg:px-72 px-32 relative">
         <div>
-            <div class="border shadow-md rounded-md p-5 relative">
+            <div class="border-8 shadow-lg p-5 relative">
                 @if (Auth::user())
                     @if (Auth::user()->id == $author->id || $editor)
-                        <div class="absolute top-3 left-3">
+                        <div class="absolute top-3 left-3 flex items-center">
                             <a href="/notes/{{$show->id}}/edit" class="bg-green-500 rounded-md px-2 py-1 text-white">
                                 Edit
                             </a>
+                            <form action="/notes/{{$show->id}}" method="POST" class="mx-2">
+                                @csrf
+                                @method("DELETE")
+                                <button type="submit">
+                                    <i class="fas fa-trash hover:text-red-700"></i>
+                                </button>
+                            </form>
                         </div>
                     @endif
                 @endif
@@ -47,8 +53,13 @@
                             @endif
                         @endif
                 </div>
-                <div class="p-10">
-                    <p class="py-3">{!! $show->content !!}</p>
+                <div class="lg:p-10 p-5">
+                    <p class="text-indigo-500 text-2xl font-medium">
+                        {{ $show->title}}
+                    </p>
+                    <p class="py-3">
+                        {!! $show->content !!}
+                    </p>
                 </div>
                 <div class="p-10">
                     @php

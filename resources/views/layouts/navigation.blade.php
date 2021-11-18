@@ -1,31 +1,53 @@
-
 <!-- Navigation Links -->
-    <header class="bg-gray-100 border-b-4">
-        <nav class="flex items-center justify-between p-6 h-20 bg-white shadow-sm">
-            <div class="py-5 px-3 rounded-md bg-gradient-to-r from-black to-gray-500 text-sm text-white font-semibold shadow-lg hover:cursor-pointer hover:shadow-lg">LEVEL NOTE</div>
-            <ul>
-                <li class="space-x-5 text-xl">
-                    <a href="/" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">Home</a>
-                    @if (Auth::user())
-                        <a href="/perso" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">Vos notes</a>
-                        <a href="/liked" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">Notes likées</a>
-                        <a href="/shared" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">Notes partagées</a>
-                        <a href="/user/{{Auth::user()->id}}" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">Profil</a>
-                        <form method="POST" action="{{ route('logout') }}" class="hidden sm:inline-block text-gray-700 hover:text-indigo-700">
-                            @csrf
-                            <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
+<header class="bg-gray-100 border-b-4">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <div class="w-full text-gray-700 bg-white dark-mode:text-gray-200 dark-mode:bg-gray-800">
+        <div x-data="{ open: true }"
+            class="flex flex-col max-w-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row md:px-6 lg:px-8">
+            <div class="flex flex-row items-center justify-between p-4">
+                <div class="py-5 px-3 rounded-md bg-gradient-to-r from-black to-gray-500 text-sm text-white font-semibold shadow-lg hover:cursor-pointer hover:shadow-lg">LEVEL NOTE</div>
+                <button class="rounded-lg md:hidden focus:outline-none focus:shadow-outline"
+                    @click="open = !open">
+                    <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+                        <path x-show="!open" fill-rule="evenodd"
+                            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"
+                            clip-rule="evenodd"></path>
+                        <path x-show="open" fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+            <nav :class="{'flex': open, 'hidden': !open}"
+                class="flex-col flex-grow hidden pb-4 md:pb-0 md:flex md:justify-end md:flex-row">
+                @can('onMobile')
+                    <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                        href="/">Home</a>
+                @endcan
+                @if (Auth::user())
+                    <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                        href="/perso">Vos notes</a>
+                        @can('onMobile')
+                            <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                            href="/liked">Notes likées</a>
+                        @endcan
+                    <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                        href="/shared">Notes partagées</a>
+                    <a class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                        href="/user/{{ Auth::user()->id }}">Profil</a>
+                    <form method="POST" action="{{ route('logout') }}"
+                    class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+                        @csrf
+                        <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
                             this.closest('form').submit();">
-                                Log Out
-                            </x-responsive-nav-link>
-                        </form>
-                    @endif
-                </li>
-                <div class="sm:hidden space-y-1 hover:cursor-pointer">
-                <span class="w-10 h-1 bg-gray-600 rounded-full block"></span>
-                <span class="w-10 h-1 bg-gray-600 rounded-full block"></span>
-                <span class="w-10 h-1 bg-gray-600 rounded-full block"></span>
-                </div>
-            </ul>
-        </nav>
+                            Log Out
+                        </x-responsive-nav-link>
+                    </form>
+                @endif
+            </nav>
+        </div>
+    </div>
 
-    </header>
+    
+
+</header>

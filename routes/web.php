@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (Auth::user()) {
-        $notes = Note::orderByDesc("like")->paginate(3);
+        $notes = Note::orderByDesc("like")->paginate(9);
         $users = User::all();
         $pivot = NoteRoleUserPivot::all();
         $tag_pivot = NoteTagPivot::all();
@@ -42,7 +42,7 @@ Route::get('/', function () {
         $tags = Tag::all()->sortBy("tag");
         return view("pages.global.global", compact("notes","users", "pivot", "tag_pivot", "tags"));
     }
-});
+})->middleware("onMobile");
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -50,7 +50,7 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::resource('/notes', NoteController::class)->middleware("onMobile");
+Route::resource('/notes', NoteController::class);
 
 /* ---------------------------- Page : Vos notes ---------------------------- */
 
@@ -63,7 +63,8 @@ Route::get("/perso", function() {
         array_push($notes, $note);
     }
     $userLike = Like::where("user_id", $user->id)->get();
-    return view("pages.perso.perso", compact("notes", "userLike"));
+    $users = User::all();
+    return view("pages.perso.perso", compact("notes", "userLike", "pivot", "users"));
 });
 
 /* --------------------------- Page : Notes Likées -------------------------- */

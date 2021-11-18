@@ -183,7 +183,7 @@ class NoteController extends Controller
             ]);
         }
 
-        return redirect("/notes/".$update->id)->with("success", "Votre notre a bien été modifiée");;;
+        return redirect("/notes/".$update->id)->with("success", "Votre note a bien été modifiée");;;
     }
 
     /**

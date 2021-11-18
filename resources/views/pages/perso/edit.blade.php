@@ -6,7 +6,7 @@
         <form action="/notes/{{$edit->id}}" method="POST">
             @method("PUT")
             @csrf
-            <div class="grid gris-cols-1 gap-4 px-20">
+            <div class="grid gris-cols-1 gap-4 lg:px-20 px-10">
                 <div>
                     <label class="text-gray-700 dark:text-gray-200" for="title">Title</label>
                     <input id="title" name="title" type="text" value="{{old("title") ? old("title") : $edit->title}}" class="block w-96 px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-yellow-200 dark:focus:border-yellow-200 focus:outline-none focus:ring">
@@ -16,7 +16,7 @@
                     <textarea class="form-control" id="summary_ckeditor" name="summary_ckeditor">{{old("content") ? old("content") : $edit->content}}</textarea>
                 </div>
             </div>
-            <div class="grid grid-cols-3 gap-4 px-20 mt-3">
+            <div class="grid grid-cols-3 gap-4 lg:px-20 px-10 mt-3">
                 <div>
                     <label class="text-gray-700 dark:text-gray-200" for="tag1">Tag #1</label>
                     <select id="tag1" name="tag1" type="text" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-yellow-200 dark:focus:border-yellow-200 focus:outline-none focus:ring">
