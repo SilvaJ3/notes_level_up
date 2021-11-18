@@ -1,6 +1,5 @@
 @extends('layouts.index')
 
-
 @section('content')
     <div class="flex justify-center py-4">
         <h1 class="text-center text-black text-3xl underline">Les notes que d'autres utilisateurs vous ont partagées</h1>
@@ -16,8 +15,8 @@
         <div class="grid xl:grid-cols-3 lg:grid-cols-2 gap-4 grid-cols-1">
                 @foreach ($shared_list as $note)
                         <!-- card -->
-                        <div class="overflow-hidden shadow-lg transition duration-500 ease-in-out transform hover:-translate-y-5 hover:shadow-2xl rounded-lg w-60 md:w-80 m-auto">
-                                <div class="bg-white w-full p-4 relative">
+                        <div class="overflow-hidden shadow-lg transition duration-500 ease-in-out transform hover:-translate-y-5 hover:shadow-2xl rounded-lg h-full w-60 md:w-80 m-auto bg-white">
+                                <div class="w-full p-4 relative">
                                     <div class="absolute top-2 right-2 flex">
                                         @if (Auth::user())
                                             <a href="#" class="text-indigo-600 hover:text-indigo-900">

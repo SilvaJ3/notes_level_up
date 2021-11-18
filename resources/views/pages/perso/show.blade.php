@@ -8,11 +8,13 @@
         <div>
             <div class="border-8 shadow-lg p-5 relative">
                 @if (Auth::user())
-                    @if (Auth::user()->id == $author->id || $editor)
-                        <div class="absolute top-3 left-3 flex items-center">
+                <div class="absolute top-3 left-3 flex items-center">
+                            @if (Auth::user()->id == $author->id || $editor)
                             <a href="/notes/{{$show->id}}/edit" class="bg-green-500 rounded-md px-2 py-1 text-white">
                                 Edit
                             </a>
+                            @endif
+                            @if (Auth::user()->id == $author->id)
                             <form action="/notes/{{$show->id}}" method="POST" class="mx-2">
                                 @csrf
                                 @method("DELETE")
@@ -20,8 +22,8 @@
                                     <i class="fas fa-trash hover:text-red-700"></i>
                                 </button>
                             </form>
+                            @endif
                         </div>
-                    @endif
                 @endif
                 <div class="absolute top-2 right-2 flex">
                     <p class="mx-2">

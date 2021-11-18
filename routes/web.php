@@ -12,6 +12,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,7 @@ Route::get('/', function () {
         $userLike = Like::where("user_id", $user->id)->get();
         return view("pages.global.global", compact("notes", "userLike","users", "pivot", "tag_pivot", "tags"));
     } else {
-        $notes = Note::orderByDesc("like")->paginate(3);
+        $notes = Note::orderByDesc("like")->paginate(9);
         $users = User::all();
         $pivot = NoteRoleUserPivot::all();
         $tag_pivot = NoteTagPivot::all();
