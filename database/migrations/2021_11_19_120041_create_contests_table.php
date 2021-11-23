@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotesTable extends Migration
+class CreateContestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateNotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('notes', function (Blueprint $table) {
+        Schema::create('contests', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->longText("content");
-            $table->integer("like");
-            $table->boolean("contest");
-            $table->integer("vote");
+            $table->foreignId("note_id")->constrained();
+            $table->foreignId("user_id")->constrained();
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateNotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notes');
+        Schema::dropIfExists('contests');
     }
 }

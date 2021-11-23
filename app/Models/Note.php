@@ -27,4 +27,9 @@ class Note extends Model
     {
         return $this->belongsToMany(User::class, "note_role_user_pivots");
     }
+
+    public function votes() 
+    {
+        return $this->belongsToMany(Contest::class, "contests");
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContestController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\TagController;
@@ -149,3 +150,7 @@ Route::post("/shop/{id}/like", function($id) {
 
     return redirect()->back()->with("success", "Achat validé -- + 1 ❤️");
 });
+
+/* -------------------------------- Concours -------------------------------- */
+
+Route::post("/contest/{id}/vote", [ContestController::class, "vote"]);

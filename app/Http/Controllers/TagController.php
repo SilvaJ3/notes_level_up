@@ -50,11 +50,21 @@ class TagController extends Controller
         if ($tag) {
             return redirect()->back()->with("warning", "Tag déjà existant");;
         } else {
-            $store = new Tag;
-            $store->tag = $request->tag;
+            if (Auth::user()->role_id == 2 && Auth::user()->credits >= 30) {
+                $store = new Tag;
+                $store->tag = $request->tag;
+                $user = User::find(Auth::user()->id);
+                $user->credits -= 30;
 
-            $store->save();
-            return redirect("/notes")->with("success", "Tag créé");;;
+                $store->save();
+                return redirect("/notes")->with("success", "Tag créé -- 30 🪙 dépensés");
+            } elseif (Auth::user()->role_id == 1) {
+                $store = new Tag;
+                $store->tag = $request->tag;
+    
+                $store->save();
+                return redirect("/notes")->with("success", "Tag créé");
+            }
         }
         
     }

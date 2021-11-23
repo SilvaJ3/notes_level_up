@@ -57,19 +57,19 @@
                                             </a>
                                         @endforeach
                                     </div>
-                                    @php
-                                        $user_id = $pivot->where("user_id", Auth::user()->id)->first()->user_id;
-                                        $user = $users->where("id", $user_id)->first();
-                                    @endphp
-                                    <div class="flex items-center mt-2">
-                                        <img class='w-10 h-10 object-cover rounded-full' alt='User avatar' src='{{asset("img/".$user->image)}}'>
-                            
-                                        <div class="pl-3">
-                                            <div class="font-medium">
-                                                {{$user->name}}
+                                        @php
+                                            $user_id = $pivot->where("role_notes_id", 1)->first()->user_id;
+                                            $user = $users->where("id", $user_id)->first();
+                                        @endphp
+                                        <div class="flex items-center mt-2">
+                                            <img class='w-10 h-10 object-cover rounded-full' alt='User avatar' src='{{asset("img/".$user->image)}}'>
+                                
+                                            <div class="pl-3">
+                                                <div class="font-medium">
+                                                    {{$user->name}}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
                         </div>
                         

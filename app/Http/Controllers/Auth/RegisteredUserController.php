@@ -46,6 +46,7 @@ class RegisteredUserController extends Controller
             'role_id' => 2,
             'likes' => 10,
             'credits' => 10,
+            'vote' => 1,
             'image' => $request->image,
             'password' => Hash::make($request->password),
         ]);

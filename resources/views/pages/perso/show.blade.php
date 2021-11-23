@@ -5,7 +5,7 @@
 @section('content')
 
     {{-- Partie Concours --}}
-    {{-- @if ($end > $now)
+    @if ($end > $now)
         <div class="flex flex-col justify-center items-center py-2 bg-red-400">
             <h1>Un concours est en cours actuellement...</h1>
             <form action="/note/{{$show->id}}/contest" method="POST">
@@ -16,7 +16,7 @@
                 </button>
             </form>
         </div>
-    @endif --}}
+    @endif
     <div class="py-12 lg:px-72 px-32 relative">
         <div>
             <div class="border-8 shadow-lg p-5 relative">

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'image',
         'likes',
         'credits',
+        'vote',
         'password',
     ];
 
@@ -63,5 +64,10 @@ class User extends Authenticatable
     public function like() 
     {
         return $this->belongsToMany(Note::class, "likes");
+    }
+
+    public function votes() 
+    {
+        return $this->belongsToMany(Contest::class, "contests");
     }
 }

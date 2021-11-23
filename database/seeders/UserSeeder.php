@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
                 "role_id" => 1,
                 "likes" => 10,
                 "credits" => 10,
+                "vote" => 1,
             ],
             [
                 "name" => "user1",
@@ -32,6 +33,7 @@ class UserSeeder extends Seeder
                 "role_id" => 2,
                 "likes" => 10,
                 "credits" => 10,
+                "vote" => 1,
             ],
             [
                 "name" => "user2",
@@ -41,6 +43,7 @@ class UserSeeder extends Seeder
                 "role_id" => 2,
                 "likes" => 10,
                 "credits" => 10,
+                "vote" => 1,
             ],
         ]);
     }

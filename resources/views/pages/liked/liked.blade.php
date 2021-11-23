@@ -61,7 +61,7 @@
                                     @endforeach
                                 </div>
                                 @php
-                                    $user_id = $pivot->where("user_id", Auth::user()->id)->first()->user_id;
+                                    $user_id = $pivot->where("role_notes_id", 1)->first()->user_id;
                                     $user = $users->where("id", $user_id)->first();
                                 @endphp
                                 <div class="flex items-center mt-2">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contest;
 use App\Models\Like;
 use App\Models\Note;
 use App\Models\NoteRoleUserPivot;
@@ -90,7 +91,7 @@ class NoteController extends Controller
         $user->credits += 1;
         $user->save();
 
-        return redirect("/perso")->with("success", "Note ajoutée avec success. \n + 1 🪙");;;
+        return redirect("/perso")->with("success", "Note ajoutée avec success. \n 1 🪙 obtenu");;;
     }
 
     /**
@@ -260,11 +261,20 @@ class NoteController extends Controller
     public function contest(Request $request, $id)
     {
         $contest = Note::find($id);
-        $contest->contest = True;
-
-        $contest->save();
-
-        return redirect()->back()->with("success", "Merci pour votre participation 🎫");
+        if ($contest == True) {
+            return redirect()->back()->with("warning", "Vous participez déjà au concours ⛔");
+        } else {
+            $contest->contest = True;
+            $contest->save();
+            
+            $user = User::find($contest->users[0]->id);
+            $user->vote -= 1;
+            $user->save();
+    
+            return redirect()->back()->with("success", "Merci pour votre participation 🎫");
+        }
     }
+
+    
 }
 
